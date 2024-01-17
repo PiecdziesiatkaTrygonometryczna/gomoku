@@ -33,10 +33,17 @@ main {
   height: 50px;
   width: 50px;
   background: var(--orange);
-  color: white;
   font-size: 2rem;
   display: grid;
   place-content: center;
+}
+
+.cell.black {
+  color: black;
+}
+
+.cell.white {
+  color: white;
 }
 
 .cell:hover {
