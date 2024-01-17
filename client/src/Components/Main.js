@@ -17,7 +17,7 @@ const Main = () => {
   const handleCellClick = (e) => {
     const id = e.currentTarget.id;
     if (board[id] === "") {
-      setBoard((data) => ({ ...data, [id]: "X" }));
+      setBoard((data) => ({ ...data, [id]: "O" }));
     }
   };
 
