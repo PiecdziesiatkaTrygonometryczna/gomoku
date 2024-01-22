@@ -1,0 +1,7 @@
+sv
+npm install express
+node index.js
+
+cl
+npm install react-scripts
+npm start

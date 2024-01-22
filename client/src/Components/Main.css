@@ -38,12 +38,12 @@ main {
   place-content: center;
 }
 
-.cell.black {
-  color: black;
+.cell.O {
+  color: white;
 }
 
-.cell.white {
-  color: white;
+.cell.X {
+  color: black;
 }
 
 .cell:hover {

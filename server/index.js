@@ -11,11 +11,6 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("Ktoś wyszedł");
   });
-
-    socket.on("joinRoom", (roomCode) => {
-    console.log(`Użytkownik dołączył do pokoju ${roomCode}`);
-    socket.join(roomCode);
-  });
 });
 
 server.listen(port, () => {
