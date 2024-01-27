@@ -1,0 +1,4 @@
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"email": "lol123@wp.pl", "password": "123"}' \
+  http://localhost:3003/signup

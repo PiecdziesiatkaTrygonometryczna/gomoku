@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Main.css";
+import io from "socket.io-client";
 
 const Cell = ({ handleCellClick, id, text }) => {
   return (
@@ -15,6 +16,16 @@ const Main = () => {
   const [board, setBoard] = useState(initialBoard);
   const [currentPlayer, setCurrentPlayer] = useState("O");
   const [winner, setWinner] = useState(null);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3003");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   const checkWinner = (row, col) => {
     const directions = [
@@ -75,11 +86,6 @@ const Main = () => {
     setCurrentPlayer("O");
     setWinner(null);
   };
-
-  useEffect(() => {
-    if (winner) {
-    }
-  }, [winner]);
 
   return (
     <main>
