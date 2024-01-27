@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link, Routes, Route } from 'react-router-dom'; // Import Routes and Route
+import { Link, Routes, Route } from 'react-router-dom';
 import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
+import GameOwnerLookup from './GameOwnerLookup';
 
 
 const Dashboard = () => {
@@ -9,7 +10,11 @@ const Dashboard = () => {
       <div>
         <h1>Dashboard</h1>
         <Link to="/edit-account">Edytuj konto</Link>
+        <br/>
         <Link to="/search-users">Wyszukaj użytkowników</Link>
+        <br/>
+        <Link to="/game-owner-lookup">Wyszukaj właścicieli gier</Link>
+        <br/>
         <Link to="/game">Nowa gra</Link>
   
         <Routes>
@@ -17,6 +22,9 @@ const Dashboard = () => {
         </Routes>
         <Routes>
           <Route path="/search-users" element={<FindUsers />} />
+        </Routes>
+        <Routes>
+          <Route path="/game-owner-lookup" element={<GameOwnerLookup />} />
         </Routes>
       </div>
     );

@@ -12,6 +12,38 @@ const http = require('http').createServer(app);
 app.use(cors());
 app.use(express.json());
 
+app.post('/api/games', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { owner, player1, player2, places_of_x, places_of_y, is_over, player_won } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const gameData = {
+      game_id: uuidv4(),
+      owner,
+      player1,
+      player2,
+      places_of_x,
+      places_of_y,
+      is_over,
+      player_won,
+    };
+
+    await games.insertOne(gameData);
+    
+    res.status(201).json({ message: 'Game created successfully', gameId: gameData.game_id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
 app.post('/signup', async (req, res) => {
   const client = new MongoClient(uri);
   const { email, password } = req.body;
@@ -90,35 +122,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.put('/edit-account/:userId', async (req, res) => {
-  const client = new MongoClient(uri);
-  const userId = req.params.userId;
-  const { email, password } = req.body;
 
-  try {
-    await client.connect();
-    const database = client.db('gomoku');
-    const users = database.collection('users');
-
-    const existingUser = await users.findOne({ user_id: userId });
-
-    if (!existingUser) {
-      res.status(404).send('User not found');
-      return;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await users.updateOne({ user_id: userId }, { $set: { email: email.toLowerCase(), hashed_password: hashedPassword } });
-
-    res.status(200).send('Account updated successfully');
-  } catch (err) {
-    console.log(err);
-    res.status(500).send('Server error');
-  } finally {
-    await client.close();
-  }
-});
 
 app.get('/search-users', async (req, res) => {
   const client = new MongoClient(uri);
@@ -165,6 +169,61 @@ app.get('/users-db', async (req, res) => {
     await client.close();
   }
 });
+
+app.get('/api/games/:gameId/owner', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (game) {
+      res.status(200).json({ owner: game.owner });
+    } else {
+      res.status(404).send('Game not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+app.put('/edit-account/:userId', async (req, res) => {
+  const client = new MongoClient(uri);
+  const userId = req.params.userId;
+  const { email, password } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const existingUser = await users.findOne({ user_id: userId });
+
+    if (!existingUser) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await users.updateOne({ user_id: userId }, { $set: { email: email.toLowerCase(), hashed_password: hashedPassword } });
+
+    res.status(200).send('Account updated successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 app.delete('/delete-account/:userId', async (req, res) => {
   const client = new MongoClient(uri);
