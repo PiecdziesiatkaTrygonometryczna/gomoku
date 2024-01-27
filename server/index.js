@@ -513,5 +513,49 @@ app.delete('/delete-account/:userId', async (req, res) => {
   }
 });
 
+app.delete('/delete-game/:gameId', async (req, res) => {
+  const client = new MongoClient(uri);
+  const gameId = req.params.gameId;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const deletedGame = await games.findOneAndDelete({ game_id: gameId });
+
+    if (!deletedGame.value) {
+      return res.status(404).send('Game not found');
+    }
+
+    res.status(200).send('Game deleted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+app.delete('/delete-all-games', async (req, res) => {
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const deletedGames = await games.deleteMany({});
+
+    res.status(200).send(`Deleted ${deletedGames.deletedCount} games`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

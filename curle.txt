@@ -13,12 +13,12 @@ curl -X PUT -H "Content-Type: application/json" -d '{"email": "nowy_email@exampl
 
 
 curl -X POST -H "Content-Type: application/json" -d '{
-  "owner": "user_id_here",
-  "player1": "player1_nickname_here",
-  "player2": "player2_nickname_here",
-  "places_of_x": ["A1", "B2", "C3"],
-  "places_of_y": ["D4", "E5", "F6"],
-  "is_over": false,
+  "owner": "",
+  "player1": "",
+  "player2": "",
+  "places_of_x": [],
+  "places_of_y": [],
+  "is_over": "value",
   "player_won": null
 }' http://localhost:3003/api/games
 

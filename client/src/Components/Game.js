@@ -1,116 +1,59 @@
-  import { useState, useEffect } from "react";
-  import "./Game.css";
-  import io from "socket.io-client";
+import { useState, useEffect } from "react";
+import "./Game.css";
+import io from "socket.io-client";
 
-  const Cell = ({ handleCellClick, id, text }) => {
-    return (
-      <div id={id} className={`cell ${text}`} onClick={handleCellClick}>
-        {text}
-      </div>
-    );
+const Game = () => {
+  const [gameId, setGameId] = useState(null);
+  const [message, setMessage] = useState('');
+
+  const deleteAllGames = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/delete-all-games', {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        const data = await response.text();
+        setMessage(data);
+      } else {
+        console.error('Failed to delete all games');
+      }
+    } catch (error) {
+      console.error('Failed to delete all games', error);
+    }
   };
 
-  const Game = () => {
-    const boardSize = 15;
-    const initialBoard = Array(boardSize * boardSize).fill("");
-    const [board, setBoard] = useState(initialBoard);
-    const [currentPlayer, setCurrentPlayer] = useState("O");
-    const [winner, setWinner] = useState(null);
-    const [setSocket] = useState(null);
+  const createGame = async () => {
+    const response = await fetch('http://localhost:3003/api/games', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "owner": "",
+        "player1": "",
+        "player2": "",
+        "places_of_x": [],
+        "places_of_y": [],
+        "is_over": "value",
+        "player_won": null
+      })
+    });
 
-    useEffect(() => {
-      const newSocket = io("http://localhost:3003");
-      setSocket(newSocket);
+    const data = await response.json();
+    console.log('Game ID:', gameId);
 
-      return () => {
-        newSocket.disconnect();
-      };
-    }, [setSocket]);
-
-    useEffect(() => {
-      console.log("Aktualny stan planszy:", board);
-    }, [board]);
-
-    const checkWinner = (row, col) => {
-      const directions = [
-        [0, 1],
-        [1, 0],
-        [1, 1],
-        [1, -1],
-      ];
-
-      for (const [dx, dy] of directions) {
-        let count = 1;
-        let x = row + dx;
-        let y = col + dy;
-
-        while (x >= 0 && x < boardSize && y >= 0 && y < boardSize && board[x * boardSize + y] === currentPlayer) {
-          count++;
-          x += dx;
-          y += dy;
-        }
-
-        x = row - dx;
-        y = col - dy;
-
-        while (x >= 0 && x < boardSize && y >= 0 && y < boardSize && board[x * boardSize + y] === currentPlayer) {
-          count++;
-          x -= dx;
-          y -= dy;
-        }
-
-        if (count >= 5) {
-          setWinner(currentPlayer);
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    const handleCellClick = (e) => {
-      if (winner) {
-        return;
-      }
-
-      const id = e.currentTarget.id;
-      if (board[id] === "") {
-        setBoard((data) => ({ ...data, [id]: currentPlayer }));
-
-        if (checkWinner(Math.floor(id / boardSize), id % boardSize)) {
-          setWinner(currentPlayer);
-        } else {
-          setCurrentPlayer(currentPlayer === "O" ? "X" : "O");
-        }
-      }
-    };
-
-    const resetGame = () => {
-      setBoard(initialBoard);
-      setCurrentPlayer("O");
-      setWinner(null);
-    };
-
-    return (
-      <main>
-        <div className="controls">
-          <button onClick={resetGame}>Nowa Gra</button>
-        </div>
-        {winner && (
-          <div className="winner-message">
-            <p>{`Gracz ${winner} wygrywa!`}</p>
-          </div>
-        )}
-        <section className="main-section">
-          {Array(boardSize).fill().map((_, i) => (
-            Array(boardSize).fill().map((_, j) => {
-              const id = i * boardSize + j;
-              return <Cell handleCellClick={handleCellClick} id={id.toString()} text={board[id]} />
-            })
-          ))}
-        </section>
-      </main>
-    );
+    setGameId(data._id);
   };
 
-  export default Game;
+  return (
+    <div>
+      <button onClick={createGame}>Create Game</button>
+      {gameId && <h1>{gameId}</h1>}
+      <button onClick={deleteAllGames}>Delete All Games</button>
+      {message && <p>{message}</p>}
+    </div>
+  );
+};
+
+export default Game;
