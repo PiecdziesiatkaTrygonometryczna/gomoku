@@ -120,5 +120,51 @@ app.put('/edit-account/:userId', async (req, res) => {
   }
 });
 
+app.get('/search-users', async (req, res) => {
+  const client = new MongoClient(uri);
+
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required for search.' });
+    }
+
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const regex = new RegExp(email, 'i');
+    const searchCriteria = { email: { $regex: regex } };
+
+    const searchResults = await users.find(searchCriteria).toArray();
+    res.status(200).json(searchResults);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
+app.get('/users-db', async (req, res) => {
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const allUsers = await users.find({}).toArray();
+    res.status(200).json(allUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

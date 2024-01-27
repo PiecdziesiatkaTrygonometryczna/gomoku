@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Routes, Route } from 'react-router-dom'; // Import Routes and Route
 import EditAccount from './EditAccount';
+import FindUsers from './FindUsers';
 
 
 const Dashboard = () => {
@@ -14,6 +15,9 @@ const Dashboard = () => {
   
         <Routes>
           <Route path="/edit-account" element={<EditAccount />} />
+        </Routes>
+        <Routes>
+          <Route path="/search-users" element={<FindUsers />} />
         </Routes>
       </div>
     );
