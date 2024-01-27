@@ -268,6 +268,31 @@ app.get('/api/games/:gameId/owner', async (req, res) => {
   }
 });
 
+app.get('/api/games/:gameId/places', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (game) {
+      res.status(200).json({ placesX: game.places_of_x, placesO: game.places_of_y });
+    } else {
+      res.status(404).send('Game not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
 app.put('/edit-account/:userId', async (req, res) => {
   const client = new MongoClient(uri);
   const userId = req.params.userId;
@@ -298,9 +323,11 @@ app.put('/edit-account/:userId', async (req, res) => {
   }
 });
 
-app.get('/api/games/:gameId/places', async (req, res) => {
+
+app.put('/api/games/:gameId/edit-x-coordinates', async (req, res) => {
   const client = new MongoClient(uri);
   const { gameId } = req.params;
+  const { coordinates } = req.body;
 
   try {
     await client.connect();
@@ -309,11 +336,14 @@ app.get('/api/games/:gameId/places', async (req, res) => {
 
     const game = await games.findOne({ game_id: gameId });
 
-    if (game) {
-      res.status(200).json({ placesX: game.places_of_x, placesO: game.places_of_y });
-    } else {
+    if (!game) {
       res.status(404).send('Game not found');
+      return;
     }
+
+    await games.updateOne({ game_id: gameId }, { $set: { places_of_x: coordinates } });
+
+    res.status(200).json({ message: 'X coordinates edited successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -321,6 +351,37 @@ app.get('/api/games/:gameId/places', async (req, res) => {
     await client.close();
   }
 });
+
+app.put('/api/games/:gameId/edit-y-coordinates', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+  const { coordinates } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (!game) {
+      res.status(404).send('Game not found');
+      return;
+    }
+
+    await games.updateOne({ game_id: gameId }, { $set: { places_of_y: coordinates } });
+
+    res.status(200).json({ message: 'Y coordinates edited successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
+
 
 
 app.delete('/delete-account/:userId', async (req, res) => {

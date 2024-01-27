@@ -4,6 +4,7 @@ import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
 import GameOwnerLookup from './GameOwnerLookup';
 import GameBoard from './Gameboard';
+import EditCoordinates from './EditCoordinates';
 
 
 const Dashboard = () => {
@@ -15,6 +16,8 @@ const Dashboard = () => {
         <Link to="/search-users">Wyszukaj użytkowników</Link>
         <br/>
         <Link to="/game-owner-lookup">Wyszukaj właścicieli gier</Link>
+        <br/>
+        <Link to="/edit-coordinates">Kordy edytuj se</Link>
         <br/>
         <Link to="/game">Nowa gra</Link>
         <br/>
@@ -28,6 +31,9 @@ const Dashboard = () => {
         </Routes>
         <Routes>
           <Route path="/game-owner-lookup" element={<GameOwnerLookup />} />
+        </Routes>
+        <Routes>
+          <Route path="/edit-coordinates" element={<EditCoordinates />} />
         </Routes>
         <Routes>
           <Route path="/gameboard" element={<GameBoard />} />
