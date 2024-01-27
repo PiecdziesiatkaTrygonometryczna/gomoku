@@ -16,7 +16,7 @@
     const [board, setBoard] = useState(initialBoard);
     const [currentPlayer, setCurrentPlayer] = useState("O");
     const [winner, setWinner] = useState(null);
-    const [socket, setSocket] = useState(null);
+    const [setSocket] = useState(null);
 
     useEffect(() => {
       const newSocket = io("http://localhost:3003");
@@ -25,7 +25,7 @@
       return () => {
         newSocket.disconnect();
       };
-    }, []);
+    }, [setSocket]);
 
     useEffect(() => {
       console.log("Aktualny stan planszy:", board);
