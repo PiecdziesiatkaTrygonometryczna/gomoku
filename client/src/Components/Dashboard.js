@@ -11,7 +11,6 @@ const Dashboard = () => {
         <Link to="/edit-account">Edytuj konto</Link>
         <Link to="/search-users">Wyszukaj użytkowników</Link>
         <Link to="/game">Nowa gra</Link>
-        <Link to="/delete-account">Usuń konto</Link>
   
         <Routes>
           <Route path="/edit-account" element={<EditAccount />} />

@@ -166,5 +166,29 @@ app.get('/users-db', async (req, res) => {
   }
 });
 
+app.delete('/delete-account/:userId', async (req, res) => {
+  const client = new MongoClient(uri);
+  const userId = req.params.userId;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const deletedUser = await users.findOneAndDelete({ user_id: userId });
+
+    if (!deletedUser.value) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).send('Account deleted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
