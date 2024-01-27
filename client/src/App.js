@@ -10,6 +10,7 @@ import GameOwnerLookup from './Components/GameOwnerLookup';
 import GameBoard from './Components/Gameboard';
 import io from 'socket.io-client';
 import EditCoordinates from './Components/EditCoordinates';
+import DeleteCoordinateForm from './Components/DeleteCoordinateFrom';
 
 const socket = io.connect('http://localhost:3003');
 
@@ -78,6 +79,7 @@ function App() {
           <Route path="/search-users" element={isLoggedIn ? <FindUsers /> : null} />
           <Route path="/game-owner-lookup" element={isLoggedIn ? <GameOwnerLookup /> : null} />
           <Route path="/edit-coordinates" element={isLoggedIn ? <EditCoordinates /> : null} />
+          <Route path="/delete-coordinate-from" element={isLoggedIn ? <DeleteCoordinateForm /> : null} />
           <Route path="/game" element={isLoggedIn ? <Game socket={socket} onLogout={handleLogout} /> : null} />
         </Routes>
 

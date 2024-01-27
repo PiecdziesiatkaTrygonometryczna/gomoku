@@ -5,6 +5,7 @@ import FindUsers from './FindUsers';
 import GameOwnerLookup from './GameOwnerLookup';
 import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
+import DeleteCoordinateForm from './DeleteCoordinateFrom';
 
 const Dashboard = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -23,11 +24,14 @@ const Dashboard = ({ onLogout }) => {
         <br/>
         <Link to="/game-owner-lookup">Wyszukaj właścicieli gier</Link>
         <br/>
-        <Link to="/edit-coordinates">Kordy edytuj se</Link>
+        <Link to="/edit-coordinates">Edytuj pola</Link>
         <br/>
         <Link to="/game">Nowa gra</Link>
         <br/>
         <Link to="/gameboard">Gra</Link>
+        <br/>
+        <Link to="/delete-coordinate-from">Usuń pole</Link>
+        <br/>
         <button onClick={handleLogout}>Logout</button>
   
         <Routes>
@@ -44,6 +48,9 @@ const Dashboard = ({ onLogout }) => {
         </Routes>
         <Routes>
           <Route path="/gameboard" element={<GameBoard />} />
+        </Routes>
+        <Routes>
+          <Route path="/delete-coordinate-from" element={<DeleteCoordinateForm />} />
         </Routes>
       </div>
     );

@@ -556,6 +556,46 @@ app.delete('/delete-all-games', async (req, res) => {
   }
 });
 
+app.delete('/api/games/:gameId/delete-coordinate', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+  const { coordinateToDelete, coordinateType } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (!game) {
+      res.status(404).send('Game not found');
+      return;
+    }
+
+    let updatedCoordinates;
+
+    if (coordinateType === 'x') {
+      updatedCoordinates = game.places_of_x.filter((coord) => coord !== coordinateToDelete);
+    } else if (coordinateType === 'y') {
+      updatedCoordinates = game.places_of_y.filter((coord) => coord !== coordinateToDelete);
+    } else {
+      res.status(400).send('Invalid coordinate type');
+      return;
+    }
+
+    await games.updateOne({ game_id: gameId }, { $set: { places_of_x: updatedCoordinates } });
+
+    res.status(200).json({ message: `${coordinateType.toUpperCase()} coordinate deleted successfully` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
 
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
