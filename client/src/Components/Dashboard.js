@@ -3,6 +3,7 @@ import { Link, Routes, Route } from 'react-router-dom';
 import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
 import GameOwnerLookup from './GameOwnerLookup';
+import GameBoard from './Gameboard';
 
 
 const Dashboard = () => {
@@ -16,6 +17,8 @@ const Dashboard = () => {
         <Link to="/game-owner-lookup">Wyszukaj właścicieli gier</Link>
         <br/>
         <Link to="/game">Nowa gra</Link>
+        <br/>
+        <Link to="/gameboard">Gra</Link>
   
         <Routes>
           <Route path="/edit-account" element={<EditAccount />} />
@@ -25,6 +28,9 @@ const Dashboard = () => {
         </Routes>
         <Routes>
           <Route path="/game-owner-lookup" element={<GameOwnerLookup />} />
+        </Routes>
+        <Routes>
+          <Route path="/gameboard" element={<GameBoard />} />
         </Routes>
       </div>
     );

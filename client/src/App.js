@@ -7,6 +7,7 @@ import Dashboard from './Components/Dashboard';
 import EditAccount from './Components/EditAccount';
 import FindUsers from './Components/FindUsers';
 import GameOwnerLookup from './Components/GameOwnerLookup';
+import GameBoard from './Components/Gameboard';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:3003');
@@ -71,6 +72,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login socket={socket} onLogin={handleLogin} />} />
           <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : null} />
+          <Route path="/gameboard" element={isLoggedIn ? <GameBoard /> : null} />
           <Route path="/edit-account" element={isLoggedIn ? <EditAccount userId={userId} /> : null} />
           <Route path="/search-users" element={isLoggedIn ? <FindUsers /> : null} />
           <Route path="/game-owner-lookup" element={isLoggedIn ? <GameOwnerLookup /> : null} />

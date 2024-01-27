@@ -224,6 +224,30 @@ app.put('/edit-account/:userId', async (req, res) => {
   }
 });
 
+app.get('/api/games/:gameId/places', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (game) {
+      res.status(200).json({ placesX: game.places_of_x, placesO: game.places_of_y });
+    } else {
+      res.status(404).send('Game not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 app.delete('/delete-account/:userId', async (req, res) => {
   const client = new MongoClient(uri);
