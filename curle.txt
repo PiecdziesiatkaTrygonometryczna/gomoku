@@ -2,3 +2,6 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{"email": "lol123@wp.pl", "password": "123"}' \
   http://localhost:3003/signup
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"email": "nowy_email@example.com", "password": "1234"}' http://localhost:3003/edit-account/22392489-54b4-48ac-b2a5-eadad3f2c106

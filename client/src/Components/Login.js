@@ -9,27 +9,27 @@ const Login = ({ onLogin }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      if (isLogin) {
-        const response = await axios.post('http://localhost:3003/login', { email, password });
-        if (response.status === 200) {
-          console.log('Zalogowano:', response.data);
-          onLogin(response.data.token); 
-          navigate('/dashboard');
-        } else {
-          console.error('Błąd logowania:', response.data);
-        }
+  try {
+    if (isLogin) {
+      const response = await axios.post('http://localhost:3003/login', { email, password });
+      if (response.status === 200) {
+        console.log('Zalogowano:', response.data);
+        onLogin(response.data.token, response.data.userId);
+        navigate('/dashboard');
       } else {
-        const response = await axios.post('http://localhost:3003/signup', { email, password });
-        const { token, userId } = response.data;
-        console.log('Zarejestrowano:', token, userId);
+        console.error('Błąd logowania:', response.data);
       }
-    } catch (error) {
-      console.error('Błąd:', error.response.data);
+    } else {
+      const response = await axios.post('http://localhost:3003/signup', { email, password });
+      const { token, userId } = response.data;
+      console.log('Zarejestrowano:', token, userId);
     }
-  };
+  } catch (error) {
+    console.error('Błąd:', error.response.data);
+  }
+};
 
   return (
     <div>

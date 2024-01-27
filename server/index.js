@@ -90,5 +90,35 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.put('/edit-account/:userId', async (req, res) => {
+  const client = new MongoClient(uri);
+  const userId = req.params.userId;
+  const { email, password } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const existingUser = await users.findOne({ user_id: userId });
+
+    if (!existingUser) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await users.updateOne({ user_id: userId }, { $set: { email: email.toLowerCase(), hashed_password: hashedPassword } });
+
+    res.status(200).send('Account updated successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

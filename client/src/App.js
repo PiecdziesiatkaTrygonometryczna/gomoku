@@ -4,12 +4,16 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Game from './Components/Game';
 import Login from './Components/Login';
 import Dashboard from './Components/Dashboard';
+import EditAccount from './Components/EditAccount';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:3003');
 
+
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -18,10 +22,12 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (token) => {
+  const handleLogin = (token, userId) => {
     Cookies.set('token', token);
     setIsLoggedIn(true);
+    setUserId(userId);
   };
+
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -36,6 +42,11 @@ function App() {
           path="/dashboard"
           element={isLoggedIn ? <Dashboard /> : null}
         />
+        <Route
+          path="/edit-account"
+          element={isLoggedIn ? <EditAccount userId={userId} /> : null}
+        />
+
         <Route path="/game" element={isLoggedIn ? <Game socket={socket} onLogout={handleLogout} /> : null} />
       </Routes>
     </Router>
