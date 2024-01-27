@@ -28,6 +28,24 @@ const FindUsers = () => {
         }
     };
 
+    const handleGrantAdmin = async (email) => {
+        try {
+            await axios.put('http://localhost:3003/grant-admin', { email });
+            getAllUsers();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleRevokeAdmin = async (email) => {
+        try {
+            await axios.put('http://localhost:3003/revoke-admin', { email });
+            getAllUsers();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         getAllUsers();
     }, []);
@@ -49,7 +67,14 @@ const FindUsers = () => {
                 <h2>Search Results:</h2>
                 <ul>
                     {searchResults.map((user) => (
-                        <li key={user._id}>{user.email}</li>
+                        <li key={user._id}>
+                            {user.is_admin && <span>👑</span>} {user.email}
+                            {user.is_admin ? (
+                                <button onClick={() => handleRevokeAdmin(user.email)}>Revoke Admin</button>
+                            ) : (
+                                <button onClick={() => handleGrantAdmin(user.email)}>Grant Admin</button>
+                            )}
+                        </li>
                     ))}
                 </ul>
             </div>
@@ -58,7 +83,14 @@ const FindUsers = () => {
                 <h2>All Users:</h2>
                 <ul>
                     {allUsers.map((user) => (
-                        <li key={user._id}>{user.email}</li>
+                        <li key={user._id}>
+                            {user.is_admin && <span>👑</span>} {user.email}
+                            {user.is_admin ? (
+                                <button onClick={() => handleRevokeAdmin(user.email)}>Revoke Admin</button>
+                            ) : (
+                                <button onClick={() => handleGrantAdmin(user.email)}>Grant Admin</button>
+                            )}
+                        </li>
                     ))}
                 </ul>
             </div>

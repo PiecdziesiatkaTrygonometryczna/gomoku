@@ -142,6 +142,7 @@ app.post('/signup', async (req, res) => {
       user_id: generatedUserId,
       email: email.toLowerCase(),
       hashed_password: hashedPassword,
+      is_admin: false,
     };
 
     const insertedUser = await users.insertOne(data);
@@ -379,6 +380,110 @@ app.put('/api/games/:gameId/edit-y-coordinates', async (req, res) => {
     await client.close();
   }
 });
+
+app.put('/set-admin', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { email, isAdmin } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const user = await users.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    const updatedUser = await users.updateOne(
+      { email: email.toLowerCase() },
+      { $set: { is_admin: isAdmin } }
+    );
+
+    if (updatedUser.modifiedCount === 0) {
+      res.status(500).send('Failed to update user');
+      return;
+    }
+
+    res.status(200).send('User updated successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+app.put('/grant-admin', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { email } = req.body;
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const user = await users.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    const updatedUser = await users.updateOne(
+      { email: email.toLowerCase() },
+      { $set: { is_admin: true } }
+    );
+
+    if (updatedUser.modifiedCount === 0) {
+      res.status(500).send('Failed to update user');
+      return;
+    }
+
+    res.status(200).send('Admin privileges granted successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+app.put('/revoke-admin', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { email } = req.body;
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const user = await users.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    const updatedUser = await users.updateOne(
+      { email: email.toLowerCase() },
+      { $set: { is_admin: false } }
+    );
+
+    if (updatedUser.modifiedCount === 0) {
+      res.status(500).send('Failed to update user');
+      return;
+    }
+
+    res.status(200).send('Admin privileges revoked successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
 
 
 
