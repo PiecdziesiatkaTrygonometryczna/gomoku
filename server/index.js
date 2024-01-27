@@ -12,6 +12,80 @@ const http = require('http').createServer(app);
 app.use(cors());
 app.use(express.json());
 
+
+
+app.post('/api/games/:gameId/add-x-coordinate', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+  const { coordinateX } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (!game) {
+      res.status(404).send('Game not found');
+      return;
+    }
+
+    if (game.places_of_x.includes(coordinateX) || game.places_of_y.includes(coordinateX)) {
+      res.status(400).send('Coordinate already occupied');
+      return;
+    }
+
+    game.places_of_x.push(coordinateX);
+
+    await games.updateOne({ game_id: gameId }, { $set: { places_of_x: game.places_of_x } });
+
+    res.status(200).json({ message: 'X coordinate added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+app.post('/api/games/:gameId/add-y-coordinate', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { gameId } = req.params;
+  const { coordinateY } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const games = database.collection('games');
+
+    const game = await games.findOne({ game_id: gameId });
+
+    if (!game) {
+      res.status(404).send('Game not found');
+      return;
+    }
+
+    if (game.places_of_x.includes(coordinateY) || game.places_of_y.includes(coordinateY)) {
+      res.status(400).send('Coordinate already occupied');
+      return;
+    }
+
+    game.places_of_y.push(coordinateY);
+
+    await games.updateOne({ game_id: gameId }, { $set: { places_of_y: game.places_of_y } });
+
+    res.status(200).json({ message: 'Y coordinate added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
+
 app.post('/api/games', async (req, res) => {
   const client = new MongoClient(uri);
   const { owner, player1, player2, places_of_x, places_of_y, is_over, player_won } = req.body;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Gameboard.css';
 
 const GameBoard = () => {
@@ -29,6 +29,11 @@ const GameBoard = () => {
     }
   };
 
+  const handleCellClick = (coord) => {
+    //TODO zeby dzialalo stawianie pionków po stronie klienta
+    console.log(`Clicked on cell ${coord}`);
+  };
+
   const generateBoard = () => {
     const board = [];
     for (let i = 0; i < 15; i++) {
@@ -37,12 +42,15 @@ const GameBoard = () => {
         const coord = `${String.fromCharCode(65 + i)}${j + 1}`;
         const isX = placesX.includes(coord);
         const isO = placesO.includes(coord);
+        const isClickable = !isX && !isO;
+        const symbol = isX ? 'X' : isO ? 'O' : '';
         row.push(
           <div
             key={coord}
-            className={`board-cell ${isX ? 'cell-x' : ''} ${isO ? 'cell-o' : ''}`}
+            className={`board-cell ${isX ? 'cell-x' : ''} ${isO ? 'cell-o' : ''} ${isClickable ? 'cell-clickable' : ''}`}
+            onClick={() => isClickable && handleCellClick(coord)}
           >
-            {coord}
+            {symbol}
           </div>
         );
       }
@@ -51,9 +59,16 @@ const GameBoard = () => {
     return board;
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      handleLookup();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [gameId]);
+
   return (
     <div>
-      <h1>Game Board Lookup</h1>
       <label htmlFor="gameId">Game ID:</label>
       <input
         type="text"
