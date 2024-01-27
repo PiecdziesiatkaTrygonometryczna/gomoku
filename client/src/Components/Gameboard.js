@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Gameboard.css';
 
 const GameBoard = () => {
   const [gameId, setGameId] = useState('');
@@ -28,6 +29,28 @@ const GameBoard = () => {
     }
   };
 
+  const generateBoard = () => {
+    const board = [];
+    for (let i = 0; i < 15; i++) {
+      const row = [];
+      for (let j = 0; j < 15; j++) {
+        const coord = `${String.fromCharCode(65 + i)}${j + 1}`;
+        const isX = placesX.includes(coord);
+        const isO = placesO.includes(coord);
+        row.push(
+          <div
+            key={coord}
+            className={`board-cell ${isX ? 'cell-x' : ''} ${isO ? 'cell-o' : ''}`}
+          >
+            {coord}
+          </div>
+        );
+      }
+      board.push(<div key={i} className="board-row">{row}</div>);
+    }
+    return board;
+  };
+
   return (
     <div>
       <h1>Game Board Lookup</h1>
@@ -41,13 +64,11 @@ const GameBoard = () => {
       />
       <button onClick={handleLookup}>Lookup Game Board</button>
 
-      <div>
-        <h2>Places X:</h2>
-        <p>{placesX.join(', ')}</p>
-        <h2>Places O:</h2>
-        <p>{placesO.join(', ')}</p>
-        {error && <p>{error}</p>}
+      <div className="game-board">
+        {generateBoard()}
       </div>
+
+      {error && <p>{error}</p>}
     </div>
   );
 };
