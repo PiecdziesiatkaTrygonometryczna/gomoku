@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Main.css";
+import "./Game.css";
 import io from "socket.io-client";
 
 const Cell = ({ handleCellClick, id, text }) => {
@@ -10,7 +10,7 @@ const Cell = ({ handleCellClick, id, text }) => {
   );
 };
 
-const Main = () => {
+const Game = () => {
   const boardSize = 15;
   const initialBoard = Array(boardSize * boardSize).fill("");
   const [board, setBoard] = useState(initialBoard);
@@ -109,4 +109,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Game;

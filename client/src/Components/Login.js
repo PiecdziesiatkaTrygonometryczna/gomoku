@@ -17,7 +17,7 @@ const Login = ({ onLogin }) => {
         if (response.status === 200) {
           console.log('Zalogowano:', response.data);
           onLogin(response.data.token); 
-          navigate('/main');
+          navigate('/dashboard');
         } else {
           console.error('Błąd logowania:', response.data);
         }
