@@ -1,14 +1,20 @@
 import React from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
 import GameOwnerLookup from './GameOwnerLookup';
 import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
 
+const Dashboard = ({ onLogout }) => {
+  const navigate = useNavigate();
 
-const Dashboard = () => {
-    return (
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
+  return (
       <div>
         <h1>Dashboard</h1>
         <Link to="/edit-account">Edytuj konto</Link>
@@ -22,6 +28,7 @@ const Dashboard = () => {
         <Link to="/game">Nowa gra</Link>
         <br/>
         <Link to="/gameboard">Gra</Link>
+        <button onClick={handleLogout}>Logout</button>
   
         <Routes>
           <Route path="/edit-account" element={<EditAccount />} />

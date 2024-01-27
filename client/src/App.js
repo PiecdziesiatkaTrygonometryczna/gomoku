@@ -72,7 +72,7 @@ function App() {
 
         <Routes>
           <Route path="/login" element={<Login socket={socket} onLogin={handleLogin} />} />
-          <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : null} />
+          <Route path="/dashboard" element={isLoggedIn ? <Dashboard onLogout={handleLogout} /> : null} />
           <Route path="/gameboard" element={isLoggedIn ? <GameBoard /> : null} />
           <Route path="/edit-account" element={isLoggedIn ? <EditAccount userId={userId} /> : null} />
           <Route path="/search-users" element={isLoggedIn ? <FindUsers /> : null} />
