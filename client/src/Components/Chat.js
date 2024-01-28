@@ -3,7 +3,7 @@ import mqtt from 'mqtt';
 import Cookies from 'js-cookie';
 
 const Chat = () => {
-  const [userId, setUserId] = useState(Cookies.get('userId') || ''); // Ustawienie początkowego userId z ciasteczka
+  const [userId] = useState(Cookies.get('userId') || '');
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -49,7 +49,6 @@ const Chat = () => {
     console.log('Publishing message', messageObject);
     client.publish('chat', JSON.stringify(messageObject));
 
-    // Skip displaying own sent message in UI
     if (messageObject.userId !== userId) {
       setMessages((prevMessages) => [...prevMessages, messageObject]);
     }
