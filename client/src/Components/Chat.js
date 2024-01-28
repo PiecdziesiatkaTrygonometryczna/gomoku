@@ -4,47 +4,52 @@ import mqtt from 'mqtt';
 const Chat = ({ userId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-
-  const client = mqtt.connect('ws://localhost:9001', {
-    username: 'newuser',
-    password: '123',
-});
+  const [isConnected, setIsConnected] = useState(false);
+  const [client, setClient] = useState(null);
 
   useEffect(() => {
-    client.on('connect', () => {
-        console.log('Connected to MQTT server');
-        client.subscribe('chat');
+    const mqttClient = mqtt.connect('ws://localhost:9001', {
+      username: 'newuser',
+      password: '123',
     });
 
-    client.on('error', (error) => {
-        console.error('Error connecting to MQTT server', error);
+    mqttClient.on('connect', () => {
+      console.log('Connected to MQTT server');
+      setIsConnected(true);
+      mqttClient.subscribe('chat');
     });
 
-    client.on('message', (topic, message) => {
-        console.log(`Received message on ${topic}: ${message}`);
-        const receivedMessage = JSON.parse(message.toString());
-        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+    mqttClient.on('error', (error) => {
+      console.error('Error connecting to MQTT server', error);
     });
+
+    mqttClient.on('message', (topic, message) => {
+      console.log(`Received message on ${topic}: ${message}`);
+      const receivedMessage = JSON.parse(message.toString());
+      setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+    });
+
+    setClient(mqttClient);
 
     return () => {
-        client.end();
+      mqttClient.end();
     };
-}, [client]);
-const sendMessage = () => {
-    if (newMessage.trim() === '') return;
+  }, []);
+
+  const sendMessage = () => {
+    if (!isConnected || newMessage.trim() === '') return;
 
     const messageObject = {
-        userId,
-        text: newMessage,
+      userId,
+      text: newMessage,
     };
 
     console.log('Publishing message', messageObject);
     client.publish('chat', JSON.stringify(messageObject));
 
     setMessages((prevMessages) => [...prevMessages, messageObject]);
-
     setNewMessage('');
-};
+  };
 
   return (
     <div>
@@ -62,7 +67,9 @@ const sendMessage = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your message..."
         />
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={sendMessage} disabled={!isConnected}>
+          Send
+        </button>
       </div>
     </div>
   );

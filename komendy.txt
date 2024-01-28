@@ -11,4 +11,4 @@ npm start
 
 mosquito:
 
-sudo systemctl restart mosquitto
+sudo systemctl restart mosquitto`
