@@ -8,6 +8,7 @@ const GameBoard = () => {
     const [error, setError] = useState('');
     const [coordinateX, setCoordinateX] = useState('');
     const [coordinateY, setCoordinateY] = useState('');
+    const [winner, setWinner] = useState(null);
 
 
 
@@ -34,9 +35,63 @@ const GameBoard = () => {
         }
     }, [gameId]);
 
+    const checkForWinner = (player, coordinate) => {
+        const places = player === 'x' ? placesX : placesO;
+    
+        const horizontalWin = checkDirection(places, coordinate, 1, 0);
+        const verticalWin = checkDirection(places, coordinate, 0, 1);
+        const diagonalWin1 = checkDirection(places, coordinate, 1, 1);
+        const diagonalWin2 = checkDirection(places, coordinate, 1, -1);
+    
+        if (horizontalWin || verticalWin || diagonalWin1 || diagonalWin2) {
+          setWinner(player);
+        }
+      };
+    
+      const checkDirection = (places, coordinate, deltaRow, deltaCol) => {
+        const [row, col] = getRowAndCol(coordinate);
+    
+        let count = 1;
+        let currentRow = row + deltaRow;
+        let currentCol = col + deltaCol;
+    
+        while (places.includes(getCoordinate(currentRow, currentCol))) {
+          count++;
+          currentRow += deltaRow;
+          currentCol += deltaCol;
+        }
+    
+        currentRow = row - deltaRow;
+        currentCol = col - deltaCol;
+    
+        while (places.includes(getCoordinate(currentRow, currentCol))) {
+          count++;
+          currentRow -= deltaRow;
+          currentCol -= deltaCol;
+        }
+    
+        return count >= 5;
+      };
+    
+      const getRowAndCol = (coordinate) => {
+        const row = coordinate.charCodeAt(0) - 'A'.charCodeAt(0);
+        const col = parseInt(coordinate.slice(1), 10) - 1;
+        return [row, col];
+      };
+    
+      const getCoordinate = (row, col) => {
+        return String.fromCharCode(row + 'A'.charCodeAt(0)) + (col + 1);
+      };
+
     const handleCellClick = (coord) => {
+
+        if (winner) {
+            return;
+        }
         // to do aby dodawalo do bazy danych po kliknieicu na cella
         console.log(`Clicked on cell ${coord}`);
+        checkForWinner('x', coord);
+        checkForWinner('y', coord);
     };
 
     const handleAddCoordinate = async (player) => {
@@ -54,6 +109,7 @@ const GameBoard = () => {
     
             if (response.ok) {
                 handleLookup();
+                checkForWinner(player, player === 'x' ? coordinateX : coordinateY);
             } else {
                 setError('Error adding coordinate');
             }
@@ -158,6 +214,7 @@ const GameBoard = () => {
                     required
                 />
                 <button onClick={() => handleAddCoordinate('y')}>Add Coordinate</button>
+                {winner && <p>Player {winner} wins!</p>}
             </div>
 
             {error && <p>{error}</p>}
