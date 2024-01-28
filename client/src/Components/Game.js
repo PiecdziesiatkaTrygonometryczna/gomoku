@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./Game.css";
-import io from "socket.io-client";
 
 const Game = () => {
   const [gameId, setGameId] = useState(null);

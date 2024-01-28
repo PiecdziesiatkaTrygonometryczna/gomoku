@@ -165,6 +165,37 @@ const GameBoard = () => {
         return board;
     };
 
+
+    const handleDownloadMap = async () => {
+        try {
+            const response = await fetch(`http://localhost:3003/api/games/${gameId}/places`);
+            const data = await response.json();
+    
+            if (response.ok) {
+                const jsonData = JSON.stringify(data);
+    
+                const blob = new Blob([jsonData], { type: 'application/json' });
+    
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'game-map.json';
+    
+                document.body.appendChild(link);
+                link.click();
+    
+                document.body.removeChild(link);
+    
+                setError('');
+            } else {
+                setError('Error downloading map');
+            }
+        } catch (error) {
+            console.error(error);
+            setError('Server error');
+        }
+    };
+    
+
     useEffect(() => {
         const intervalId = setInterval(() => {
             handleLookup();
@@ -214,6 +245,8 @@ const GameBoard = () => {
                     required
                 />
                 <button onClick={() => handleAddCoordinate('y')}>Add Coordinate</button>
+                <button onClick={handleDownloadMap}>Download Map</button>
+
                 {winner && <p>Player {winner} wins!</p>}
             </div>
 

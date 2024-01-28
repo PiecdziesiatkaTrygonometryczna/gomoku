@@ -245,6 +245,31 @@ app.get('/users-db', async (req, res) => {
   }
 });
 
+app.get('/get-user-data/:userId', async (req, res) => {
+  const client = new MongoClient(uri);
+  const { userId } = req.params;
+
+  try {
+    await client.connect();
+    const database = client.db('gomoku');
+    const users = database.collection('users');
+
+    const user = await users.findOne({ user_id: userId });
+
+    if (user) {
+      res.status(200).json({ userData: user });
+    } else {
+      res.status(404).send('User not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  } finally {
+    await client.close();
+  }
+});
+
+
 app.get('/api/games/:gameId/owner', async (req, res) => {
   const client = new MongoClient(uri);
   const { gameId } = req.params;
