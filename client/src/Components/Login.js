@@ -16,7 +16,7 @@ const Login = ({ onLogin }) => {
       const response = await axios.post('http://localhost:3003/login', { email, password });
       if (response.status === 200) {
         console.log('Zalogowano:', response.data);
-        onLogin(response.data.token, response.data.userId);
+        onLogin(response.data.token, response.data.userId, response.data.isAdmin);
         navigate('/dashboard');
       } else {
         console.error('Błąd logowania:', response.data);

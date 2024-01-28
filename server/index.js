@@ -189,7 +189,7 @@ app.post('/login', async (req, res) => {
       expiresIn: 60 * 24,
     });
 
-    res.status(200).json({ token, userId: existingUser.user_id });
+    res.status(200).json({ token, userId: existingUser.user_id, isAdmin: existingUser.is_admin });
   } catch (err) {
     console.log(err);
     res.status(500).send('Server error');

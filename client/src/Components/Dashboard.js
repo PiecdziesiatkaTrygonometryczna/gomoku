@@ -7,8 +7,8 @@ import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
 import DeleteCoordinateForm from './DeleteCoordinateFrom';
 
-const Dashboard = ({ onLogout, isLoggedIn, userId }) => {
-  const navigate = useNavigate();
+const Dashboard = ({ onLogout, isLoggedIn, userId, isAdmin }) => {
+    const navigate = useNavigate();
 
   const handleLogout = () => {
     onLogout();
@@ -17,11 +17,14 @@ const Dashboard = ({ onLogout, isLoggedIn, userId }) => {
 
   useEffect(() => {
     console.log('Aktualnie zalogowany użytkownik ID:', userId);
-  }, [userId]);
+    console.log('isAdmin:', isAdmin);
+  }, [userId, isAdmin]);
 
   return (
       <div>
         <h1>Dashboard</h1>
+        {isAdmin && (
+      <>
         <Link to="/edit-account">Edytuj konto</Link>
         <br/>
         <Link to="/search-users">Wyszukaj użytkowników</Link>
@@ -30,32 +33,28 @@ const Dashboard = ({ onLogout, isLoggedIn, userId }) => {
         <br/>
         <Link to="/edit-coordinates">Edytuj pola</Link>
         <br/>
-        <Link to="/game">Nowa gra</Link>
+        <Link to="/delete-coordinate-from">Usuń pole</Link>
         <br/>
-        <Link to="/gameboard">Gra</Link>
+        <Link to="/game">Nowa gra</Link>
         <br/>
         <Link to="/delete-coordinate-from">Usuń pole</Link>
         <br/>
+      </>
+    )}
+
+        <Link to="/gameboard">Gra</Link>
+        <br/>
+
         <button onClick={handleLogout}>Logout</button>
   
         <Routes>
-          <Route path="/edit-account" element={<EditAccount />} />
-        </Routes>
-        <Routes>
-          <Route path="/search-users" element={<FindUsers />} />
-        </Routes>
-        <Routes>
-          <Route path="/game-owner-lookup" element={<GameOwnerLookup />} />
-        </Routes>
-        <Routes>
-          <Route path="/edit-coordinates" element={<EditCoordinates />} />
-        </Routes>
-        <Routes>
-          <Route path="/gameboard" element={<GameBoard />} />
-        </Routes>
-        <Routes>
-          <Route path="/delete-coordinate-from" element={<DeleteCoordinateForm />} />
-        </Routes>
+      <Route path="/edit-account" element={<EditAccount />} />
+      <Route path="/search-users" element={<FindUsers />} />
+      <Route path="/game-owner-lookup" element={<GameOwnerLookup />} />
+      <Route path="/edit-coordinates" element={<EditCoordinates />} />
+      <Route path="/gameboard" element={<GameBoard />} />
+      <Route path="/delete-coordinate-from" element={<DeleteCoordinateForm />} />
+    </Routes>
       </div>
     );
   };
