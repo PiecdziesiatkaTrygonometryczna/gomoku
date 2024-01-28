@@ -7,3 +7,8 @@ node index.js
 cl
 npm install react-scripts
 npm start
+
+
+mosquito:
+
+sudo systemctl restart mosquitto

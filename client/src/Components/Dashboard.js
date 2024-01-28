@@ -7,6 +7,7 @@ import GameOwnerLookup from './GameOwnerLookup';
 import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
 import DeleteCoordinateForm from './DeleteCoordinateFrom';
+import Chat from './Chat';
 
 const Dashboard = ({ onLogout, isLoggedIn }) => {
     const navigate = useNavigate();
@@ -52,6 +53,8 @@ const Dashboard = ({ onLogout, isLoggedIn }) => {
 
         <Link to="/gameboard">Gra</Link>
         <br/>
+        <Link to="/chat">Chat</Link>
+        <br/>
 
         <button onClick={handleLogout}>Logout</button>
   
@@ -62,6 +65,7 @@ const Dashboard = ({ onLogout, isLoggedIn }) => {
       <Route path="/edit-coordinates" element={<EditCoordinates />} />
       <Route path="/gameboard" element={<GameBoard />} />
       <Route path="/delete-coordinate-from" element={<DeleteCoordinateForm />} />
+      <Route path="/chat" element={<Chat />} />
     </Routes>
       </div>
     );

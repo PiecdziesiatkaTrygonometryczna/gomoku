@@ -11,6 +11,7 @@ import GameBoard from './Components/Gameboard';
 
 import EditCoordinates from './Components/EditCoordinates';
 import DeleteCoordinateForm from './Components/DeleteCoordinateFrom';
+import Chat from './Components/Chat';
 
 
 
@@ -77,15 +78,16 @@ function App() {
       <div>
         <LoginButton />
         <Routes>
-          <Route path="/login" element={<Login  onLogin={handleLogin} />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/dashboard" element={isLoggedIn ? <Dashboard onLogout={handleLogout} isLoggedIn={isLoggedIn} userId={userId} isAdmin={isAdmin} /> : null} />
           <Route path="/gameboard" element={isLoggedIn ? <GameBoard /> : null} />
-          <Route path="/edit-account" element={isLoggedIn && isAdmin  ? <EditAccount /> : null} />
+          <Route path="/edit-account" element={isLoggedIn && isAdmin ? <EditAccount /> : null} />
           <Route path="/search-users" element={isLoggedIn && isAdmin ? <FindUsers /> : null} />
           <Route path="/game-owner-lookup" element={isLoggedIn && isAdmin ? <GameOwnerLookup /> : null} />
           <Route path="/edit-coordinates" element={isLoggedIn && isAdmin ? <EditCoordinates /> : null} />
           <Route path="/delete-coordinate-from" element={isLoggedIn && isAdmin ? <DeleteCoordinateForm /> : null} />
-          <Route path="/game" element={isLoggedIn && isAdmin ? <Game  onLogout={handleLogout} /> : null} />
+          <Route path="/game" element={isLoggedIn && isAdmin ? <Game onLogout={handleLogout} /> : null} />
+          <Route path="/chat" element={isLoggedIn ? <Chat userId={userId} /> : null} />
         </Routes>
       </div>
     </Router>
