@@ -206,7 +206,7 @@ const GameBoard = () => {
 
     return (
         <div>
-            <h1>Game Board Lookup</h1>
+            <h1>Załaduj planszę:</h1>
             <label htmlFor="gameId">Game ID:</label>
             <input
                 type="text"
@@ -215,14 +215,14 @@ const GameBoard = () => {
                 onChange={(e) => setGameId(e.target.value)}
                 required
             />
-            <button onClick={handleLookup}>Lookup Game Board</button>
+            <button onClick={handleLookup}>Załaduj</button>
 
             <div className="game-board">
                 {generateBoard()}
             </div>
 
             <div style={{ position: 'absolute', top: 0, left: 0 }}>
-                <h2>Player X</h2>
+                <h2>Gracz X</h2>
                 <label htmlFor="coordinateX"></label>
                 <input
                     type="text"
@@ -231,11 +231,11 @@ const GameBoard = () => {
                     onChange={(e) => setCoordinateX(e.target.value)}
                     required
                 />
-                <button onClick={() => handleAddCoordinate('x')}>Add Coordinate</button>
+                <button onClick={() => handleAddCoordinate('x')}>Postaw pionek</button>
             </div>
 
             <div style={{ position: 'absolute', top: '100px', left: 0 }}>
-                <h2>Player O</h2>
+                <h2>Gracz O</h2>
                 <label htmlFor="coordinateY"></label>
                 <input
                     type="text"
@@ -244,10 +244,10 @@ const GameBoard = () => {
                     onChange={(e) => setCoordinateY(e.target.value)}
                     required
                 />
-                <button onClick={() => handleAddCoordinate('y')}>Add Coordinate</button>
-                <button onClick={handleDownloadMap}>Download Map</button>
+                <button onClick={() => handleAddCoordinate('y')}>Postaw pionek</button>
+                <button onClick={handleDownloadMap}>Zapisz mapę</button>
 
-                {winner && <p>Player {winner} wins!</p>}
+                {winner && <p>Gracz {winner} wygrał!</p>}
             </div>
 
             {error && <p>{error}</p>}

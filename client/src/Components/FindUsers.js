@@ -52,7 +52,7 @@ const FindUsers = () => {
 
     return (
         <div>
-            <h2>Search Users</h2>
+            <h2>Wyszukaj użytkowników</h2>
 
             <label>Email:</label>
             <input
@@ -61,18 +61,18 @@ const FindUsers = () => {
                 onChange={(e) => setSearchCriteria({ ...searchCriteria, email: e.target.value })}
             />
 
-            <button onClick={searchUsers}>Search</button>
+            <button onClick={searchUsers}>Szukaj</button>
 
             <div>
-                <h2>Search Results:</h2>
+                <h2>Wyniki:</h2>
                 <ul>
                     {searchResults.map((user) => (
                         <li key={user._id}>
                             {user.is_admin && <span>👑</span>} {user.email}
                             {user.is_admin ? (
-                                <button onClick={() => handleRevokeAdmin(user.email)}>Revoke Admin</button>
+                                <button onClick={() => handleRevokeAdmin(user.email)}>Zabierz Admina</button>
                             ) : (
-                                <button onClick={() => handleGrantAdmin(user.email)}>Grant Admin</button>
+                                <button onClick={() => handleGrantAdmin(user.email)}>Przydziel Admina</button>
                             )}
                         </li>
                     ))}
@@ -80,15 +80,15 @@ const FindUsers = () => {
             </div>
 
             <div>
-                <h2>All Users:</h2>
+                <h2>Wszyscy użytkownicy:</h2>
                 <ul>
                     {allUsers.map((user) => (
                         <li key={user._id}>
                             {user.is_admin && <span>👑</span>} {user.email}
                             {user.is_admin ? (
-                                <button onClick={() => handleRevokeAdmin(user.email)}>Revoke Admin</button>
+                                <button onClick={() => handleRevokeAdmin(user.email)}>Zabierz Admina</button>
                             ) : (
-                                <button onClick={() => handleGrantAdmin(user.email)}>Grant Admin</button>
+                                <button onClick={() => handleGrantAdmin(user.email)}>Przydziel Admina</button>
                             )}
                         </li>
                     ))}

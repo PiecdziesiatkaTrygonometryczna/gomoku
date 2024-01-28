@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditAccount from './EditAccount';
@@ -10,6 +10,8 @@ import DeleteCoordinateForm from './DeleteCoordinateFrom';
 import Chat from './Chat';
 
 const Dashboard = ({ onLogout, isLoggedIn }) => {
+
+  
     const navigate = useNavigate();
     const [userId, setUserId] = useState(Cookies.get('userId'));
     const [isAdmin, setIsAdmin] = useState(Cookies.get('isAdmin') === 'true');
@@ -29,6 +31,27 @@ const Dashboard = ({ onLogout, isLoggedIn }) => {
         console.log('isAdmin:', isAdmin);
     }, [cookieUserId, cookieIsAdmin, userId, isAdmin]);
 
+    const ws = useRef(null);
+
+    useEffect(() => {
+      ws.current = new WebSocket('ws://localhost:8080');
+  
+      ws.current.onmessage = (event) => {
+        alert(event.data);
+      };
+  
+      return () => {
+        ws.current.close();
+      };
+    }, []);
+  
+    const handleAdminBroadcast = () => {
+      if (ws.current && isAdmin) {
+        ws.current.send('Komunikat od admina do wszystkich użytkowników');
+      }
+    };
+  
+
   return (
       <div>
         <h1>Dashboard</h1>
@@ -40,13 +63,13 @@ const Dashboard = ({ onLogout, isLoggedIn }) => {
         <br/>
         <Link to="/game-owner-lookup">Wyszukaj właścicieli gier</Link>
         <br/>
-        <Link to="/edit-coordinates">Edytuj pola</Link>
+        <Link to="/edit-coordinates">Edytuj plansze</Link>
         <br/>
-        <Link to="/delete-coordinate-from">Usuń pole</Link>
+        <Link to="/delete-coordinate-from">Usuń pionki</Link>
         <br/>
-        <Link to="/game">Nowa gra</Link>
+        <Link to="/game">Zarządzanie grami</Link>
         <br/>
-        <Link to="/delete-coordinate-from">Usuń pole</Link>
+        <button onClick={handleAdminBroadcast}>Wyślij komunikat do wszystkich użytkowników</button>
         <br/>
       </>
     )}
@@ -56,7 +79,7 @@ const Dashboard = ({ onLogout, isLoggedIn }) => {
         <Link to="/chat">Chat</Link>
         <br/>
 
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout}>Wyloguj się</button>
   
         <Routes>
       <Route path="/edit-account" element={<EditAccount />} />

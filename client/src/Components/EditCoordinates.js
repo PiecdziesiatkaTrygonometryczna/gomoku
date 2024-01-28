@@ -17,7 +17,7 @@ const EditCoordinates = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(`All games deleted: ${data.message}`);
+        setMessage(`Wszystkie gry usunięte: ${data.message}`);
         setError('');
       } else {
         setMessage('');
@@ -39,7 +39,7 @@ const EditCoordinates = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(`Game deleted: ${data.message}`);
+        setMessage(`Usunięta gra: ${data.message}`);
         setError('');
       } else {
         setMessage('');
@@ -107,7 +107,7 @@ const EditCoordinates = () => {
           required
         />
         <br />
-        <label htmlFor="coordinatesX">Coordinates X (separated by space):</label>
+        <label htmlFor="coordinatesX">Pionki X (po spacji):</label>
         <input
           type="text"
           id="coordinatesX"
@@ -116,7 +116,7 @@ const EditCoordinates = () => {
           required
         />
         <br />
-        <label htmlFor="coordinatesY">Coordinates Y (separated by space):</label>
+        <label htmlFor="coordinatesY">Pionki O (po spacji):</label>
         <input
           type="text"
           id="coordinatesY"
@@ -125,10 +125,9 @@ const EditCoordinates = () => {
           required
         />
         <br />
-        <button type="submit">Edit Coordinates</button>
+        <button type="submit">Zatwierdź</button>
       </form>
-      <button onClick={handleDeleteGame}>Delete Game</button>
-      <button onClick={handleDeleteAllGames}>Delete All Games</button>
+      <button onClick={handleDeleteGame}>Usuń grę</button>
       {message && <p>{message}</p>}
       {error && <p>Error: {error}</p>}
     </div>

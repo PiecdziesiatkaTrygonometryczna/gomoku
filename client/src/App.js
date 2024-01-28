@@ -8,7 +8,6 @@ import EditAccount from './Components/EditAccount';
 import FindUsers from './Components/FindUsers';
 import GameOwnerLookup from './Components/GameOwnerLookup';
 import GameBoard from './Components/Gameboard';
-
 import EditCoordinates from './Components/EditCoordinates';
 import DeleteCoordinateForm from './Components/DeleteCoordinateFrom';
 import Chat from './Components/Chat';

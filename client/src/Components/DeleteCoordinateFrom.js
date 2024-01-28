@@ -26,13 +26,13 @@ const DeleteCoordinateForm = () => {
   return (
     <form onSubmit={handleDeleteCoordinate}>
       <input type="text" placeholder="Game ID" value={gameId} onChange={(e) => setGameId(e.target.value)} required />
-      <input type="text" placeholder="Coordinate to delete" value={coordinateToDelete} onChange={(e) => setCoordinateToDelete(e.target.value)} required />
+      <input type="text" placeholder="Pionek do usunięcia" value={coordinateToDelete} onChange={(e) => setCoordinateToDelete(e.target.value)} required />
       <select value={coordinateType} onChange={(e) => setCoordinateType(e.target.value)} required>
-        <option value="">Select coordinate type</option>
+        <option value="">Gracz</option>
         <option value="x">X</option>
-        <option value="y">Y</option>
+        <option value="y">O</option>
       </select>
-      <button type="submit">Delete Coordinate</button>
+      <button type="submit">Usuń pionek</button>
     </form>
   );
 };

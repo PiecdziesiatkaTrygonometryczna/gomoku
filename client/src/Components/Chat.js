@@ -70,10 +70,10 @@ const Chat = () => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message..."
+          placeholder="Wiadomość..."
         />
         <button onClick={sendMessage} disabled={!isConnected}>
-          Send
+          Wyślij
         </button>
       </div>
     </div>

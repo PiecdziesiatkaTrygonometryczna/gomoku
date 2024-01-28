@@ -26,7 +26,7 @@ const GameOwnerLookup = () => {
 
   return (
     <div>
-      <h1>Game Owner Lookup</h1>
+      <h1>Wyszukaj właściciela gry</h1>
 
       <form>
         <label htmlFor="gameId">Game ID:</label>
@@ -39,12 +39,12 @@ const GameOwnerLookup = () => {
           required
         />
         <button type="button" onClick={lookupOwner}>
-          Lookup Owner
+          Wyszukaj
         </button>
       </form>
 
       <div>
-        <h2>Game Owner:</h2>
+        <h2>Właściciel gry:</h2>
         <p>{owner}</p>
         {error && <p>{error}</p>}
       </div>

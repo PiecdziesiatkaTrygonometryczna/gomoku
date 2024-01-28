@@ -47,9 +47,9 @@ const Game = () => {
 
   return (
     <div>
-      <button onClick={createGame}>Create Game</button>
+      <button onClick={createGame}>Utwórz grę</button>
       {gameId && <h1>{gameId}</h1>}
-      <button onClick={deleteAllGames}>Delete All Games</button>
+      <button onClick={deleteAllGames}>Usuń wszystkie gry</button>
       {message && <p>{message}</p>}
     </div>
   );
