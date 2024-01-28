@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
@@ -7,13 +7,17 @@ import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
 import DeleteCoordinateForm from './DeleteCoordinateFrom';
 
-const Dashboard = ({ onLogout }) => {
+const Dashboard = ({ onLogout, isLoggedIn, userId }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     onLogout();
     navigate('/login');
   };
+
+  useEffect(() => {
+    console.log('Aktualnie zalogowany użytkownik ID:', userId);
+  }, [userId]);
 
   return (
       <div>
