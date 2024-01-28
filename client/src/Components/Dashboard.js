@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditAccount from './EditAccount';
 import FindUsers from './FindUsers';
@@ -7,18 +8,25 @@ import GameBoard from './Gameboard';
 import EditCoordinates from './EditCoordinates';
 import DeleteCoordinateForm from './DeleteCoordinateFrom';
 
-const Dashboard = ({ onLogout, isLoggedIn, userId, isAdmin }) => {
+const Dashboard = ({ onLogout, isLoggedIn }) => {
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(Cookies.get('userId'));
+    const [isAdmin, setIsAdmin] = useState(Cookies.get('isAdmin') === 'true');
 
-  const handleLogout = () => {
-    onLogout();
-    navigate('/login');
-  };
+    const handleLogout = () => {
+        onLogout();
+        navigate('/login');
+    };
 
-  useEffect(() => {
-    console.log('Aktualnie zalogowany użytkownik ID:', userId);
-    console.log('isAdmin:', isAdmin);
-  }, [userId, isAdmin]);
+    const cookieUserId = Cookies.get('userId');
+    const cookieIsAdmin = Cookies.get('isAdmin') === 'true';
+
+    useEffect(() => {
+        setUserId(cookieUserId);
+        setIsAdmin(cookieIsAdmin);
+        console.log('Aktualnie zalogowany użytkownik ID:', userId);
+        console.log('isAdmin:', isAdmin);
+    }, [cookieUserId, cookieIsAdmin, userId, isAdmin]);
 
   return (
       <div>

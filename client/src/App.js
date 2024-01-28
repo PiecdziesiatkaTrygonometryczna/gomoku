@@ -8,11 +8,11 @@ import EditAccount from './Components/EditAccount';
 import FindUsers from './Components/FindUsers';
 import GameOwnerLookup from './Components/GameOwnerLookup';
 import GameBoard from './Components/Gameboard';
-import io from 'socket.io-client';
+
 import EditCoordinates from './Components/EditCoordinates';
 import DeleteCoordinateForm from './Components/DeleteCoordinateFrom';
 
-const socket = io.connect('http://localhost:3003');
+
 
 
 
@@ -20,7 +20,6 @@ const socket = io.connect('http://localhost:3003');
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -57,9 +56,10 @@ function App() {
 
   const handleLogin = (token, userId, isAdmin) => {
     Cookies.set('token', token);
+    Cookies.set('userId', userId);
+    Cookies.set('isAdmin', isAdmin);
     setIsLoggedIn(true);
     setUserId(userId);
-    setIsAdmin(isAdmin);
   };
 
 
@@ -67,20 +67,25 @@ function App() {
     Cookies.remove('token');
     setIsLoggedIn(false);
   };
+
+
+  const isAdmin = Cookies.get('isAdmin') === 'true';
+
+
   return (
     <Router>
       <div>
         <LoginButton />
         <Routes>
-          <Route path="/login" element={<Login socket={socket} onLogin={handleLogin} />} />
+          <Route path="/login" element={<Login  onLogin={handleLogin} />} />
           <Route path="/dashboard" element={isLoggedIn ? <Dashboard onLogout={handleLogout} isLoggedIn={isLoggedIn} userId={userId} isAdmin={isAdmin} /> : null} />
           <Route path="/gameboard" element={isLoggedIn ? <GameBoard /> : null} />
-          <Route path="/edit-account" element={isLoggedIn && isAdmin ? <EditAccount userId={userId} /> : null} />
+          <Route path="/edit-account" element={isLoggedIn && isAdmin  ? <EditAccount /> : null} />
           <Route path="/search-users" element={isLoggedIn && isAdmin ? <FindUsers /> : null} />
           <Route path="/game-owner-lookup" element={isLoggedIn && isAdmin ? <GameOwnerLookup /> : null} />
           <Route path="/edit-coordinates" element={isLoggedIn && isAdmin ? <EditCoordinates /> : null} />
           <Route path="/delete-coordinate-from" element={isLoggedIn && isAdmin ? <DeleteCoordinateForm /> : null} />
-          <Route path="/game" element={isLoggedIn && isAdmin ? <Game socket={socket} onLogout={handleLogout} /> : null} />
+          <Route path="/game" element={isLoggedIn && isAdmin ? <Game  onLogout={handleLogout} /> : null} />
         </Routes>
       </div>
     </Router>
